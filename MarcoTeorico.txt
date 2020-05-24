@@ -10,4 +10,5 @@ http://sql.11sql.com/sql-primary-key.htm
 https://fresh2refresh.com/sql-tutorial/sql-constraints/sql-primary-key-composite-key/
 https://stackoverflow.com/questions/3996774/foreign-key-relationship-with-composite-primary-keys-in-sql-server-2005
 https://www.ibm.com/support/knowledgecenter/en/SSGU8G_14.1.0/com.ibm.sqls.doc/ids_sqs_0535.htm
+https://www.youtube.com/watch?v=fsG1XaZEa78
 
