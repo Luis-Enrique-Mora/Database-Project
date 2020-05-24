@@ -1,10 +1,10 @@
 Use SuperStarGym
 Go
 
-Drop Table [dbo].Alumno
+Drop Table if Exists [dbo].Alumnos
 Go
 
-Create Table Alumno
+Create Table Alumnos
 (
 	Alumno_Id int Identity (1,1),
 	Cedula Varchar(25) unique not null,

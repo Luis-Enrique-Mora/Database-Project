@@ -1,10 +1,10 @@
 Use SuperStarGym
 Go
 
-Drop Table if Exists [dbo].actividades
+Drop Table if Exists [dbo].Actividades
 Go
 
-Create table actividades
+Create table Actividades
 (
 	Actividad_Cod int Identity (1,1) not null,
 	Nombre_Actividad Varchar(50) not null,
