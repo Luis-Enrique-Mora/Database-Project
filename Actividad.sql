@@ -1,14 +1,14 @@
 Use SuperStarGym
 Go
 
-Drop Table if Exists [dbo].Actividades
+Drop Table if Exists [dbo].actividades
 Go
 
-Create table Actividades
+Create table actividades
 (
-	Actividad_Cod int Identity (1,1) not null,
-	Nombre_Actividad Varchar(50) not null,
-	Descripcion varchar(255),
-	Constraint PK_Actividad Primary Key(Actividad_Cod)
+	actividad_cod int Identity (1,1) not null,
+	nombre_actividad Varchar(50) not null,
+	descripcion varchar(255),
+	Constraint PK_actividad Primary Key(actividad_Cod)
 )
 Go

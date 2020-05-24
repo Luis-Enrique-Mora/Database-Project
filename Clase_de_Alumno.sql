@@ -1,17 +1,17 @@
 Use SuperStarGym
 Go
 
-Drop Table if Exists [dbo].Clase_De_Alumno
+Drop Table if Exists [dbo].clases_de_alumnos
 Go
 
-Create Table Clase_De_Alumno
+Create Table clases_de_alumnos
 (
-	Clase_Alumno_Id Int Identity(1,1),
-	Alumno_fk Int not null,
-	Clas_Fecha_fk DateTime not null,
-	Activi_Cod_clas_fk Int not null,
-	Constraint PK_Clase_De_Alumno Primary Key (Clase_Alumno_Id),
-	Constraint FK_Alumno Foreign Key (Alumno_fk) References Alumnos(Alumno_Id),
-	Constraint FK_Clase Foreign Key (Activi_Cod_clas_fk, Clas_Fecha_fk) References Clases(Actividad_cod_fk, fecha_hora)
+	clase_alumno_id Int Identity(1,1),
+	alumno_fk Int not null,
+	clas_fecha_fk DateTime not null,
+	activi_cod_clas_fk Int not null,
+	Constraint PK_clase_de_alumno Primary Key (clase_alumno_id),
+	Constraint FK_alumno Foreign Key (alumno_fk) References alumnos(alumno_id),
+	Constraint FK_clase Foreign Key (activi_cod_clas_fk, clas_fecha_fk) References clases(actividad_cod_fk, fecha_hora)
 )
 Go
