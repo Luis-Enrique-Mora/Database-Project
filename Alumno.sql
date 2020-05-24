@@ -16,3 +16,6 @@ Create Table Alumnos
 	Constraint PK_Alumno Primary Key (Alumno_Id)
 )
 Go
+
+/*Create Clustered Index Alumno_Nombre_Apellido1_idx
+On Alumnos(Nombre, Apellido1)*/

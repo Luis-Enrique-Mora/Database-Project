@@ -1,7 +1,7 @@
 Use SuperStarGym
 Go
 
-Drop Table if exists [dbo].Clases
+Drop Table if Exists [dbo].Clases
 Go
 
 Create table Clases
