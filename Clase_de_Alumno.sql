@@ -1,6 +1,9 @@
 Use SuperStarGym
 Go
 
+Drop Table if Exists [dbo].Clase_De_Alumno
+Go
+
 Create Table Clase_De_Alumno
 (
 	Clase_Alumno_Id Int Identity(1,1),
