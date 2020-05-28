@@ -33,7 +33,7 @@ ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Alumnos
 GO
 
---Añadimos los 3 archivos de datos al grupo de MedicoGeneral y al grupo de Especialistas
+--Añadimos los archivos de datos para los grupos creados anteriormente
 Use Master
 GO
 ALTER DATABASE SuperStarGymServer
