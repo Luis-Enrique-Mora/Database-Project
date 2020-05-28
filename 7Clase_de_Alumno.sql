@@ -1,7 +1,7 @@
-Use SuperStarGym
+Use SuperStarGymServer
 Go
 
-Drop Table if Exists [dbo].clases_de_alumnos
+Drop Table if Exists clases_de_alumnos
 Go
 
 Create Table clases_de_alumnos
