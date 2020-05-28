@@ -1,5 +1,3 @@
---Anthony se manda con los FileGroups
-
 ---Creamos la base de datos
 
 Use Master
@@ -33,7 +31,7 @@ ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Alumnos
 GO
 
---Añadimos los archivos de datos para los grupos creados anteriormente
+--Añadimos los 3 archivos de datos al grupo de MedicoGeneral y al grupo de Especialistas
 Use Master
 GO
 ALTER DATABASE SuperStarGymServer
