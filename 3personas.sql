@@ -1,7 +1,7 @@
 Use SuperStarGymServer
 Go
 
-Drop Table if Exists [dbo].personas
+Drop Table if Exists personas
 Go
 
 Create Table personas
