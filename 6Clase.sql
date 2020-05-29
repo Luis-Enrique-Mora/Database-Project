@@ -8,6 +8,7 @@ Create table clases
 (
 	limite_inscripcion int not null,
 	total_alumnos int not null,
+	precio Decimal not null,
 	sala_fk int not null,
 	fecha_hora DateTime not null,
 	actividad_cod_fk int not null,
