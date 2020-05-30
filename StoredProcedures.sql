@@ -15,27 +15,24 @@ if((@limite_inscripcion = '') or (@total_alumnos = '') or (@precio = '') or (@sa
     end
 else
 -- Verifica si ya hay una clase con el mismo codigo de actividad y fecha --
-    select fecha_hora, actividad_cod_fk, limite_inscripcion, total_alimnos from clases where fecha_hora = @fecha_hora and actividad_cod_fk = @actividad_cod_fk
-	if (@@ROWCOUNT = 0)
-	   begin
-	   -- Verifica si existe la sala y actividad en sus tablas respectivas
-	      select T1.actividad_cod, T1.nombre_actividad from actividades as T1 INNER JOIN salas as T2 ON T1.actividad_cod = @actividad_cod_fk and 
-	             T2.sala_id = @sala_fk
-	      if (@@ROWCOUNT = 0)
-	         begin
-	            print 'No existe un codigo de actividad o sala iguales a los ingresados, por favor verificar.'
-                return
-	         end
-	      else
-	         begin
-                insert into clases (limite_inscripcion, total_alumnos, precio, sala_fk, fecha_hora, actividad_cod_fk)
-                values (@limite_inscripcion, @total_alumnos, @precio, @sala_fk, @fecha_hora, @actividad_cod_fk)
-             end
-	   end
-	else
+	if exists (select fecha_hora from clases where fecha_hora = @fecha_hora and actividad_cod_fk = @actividad_cod_fk)
 	   begin
 	      print 'Ya hay una clase agendada con el mismo codigo de actividad y fecha, por favor verificar.'
           return
+	   end
+	else
+	   begin
+	   -- Verifica si existe la sala y actividad en sus tablas respectivas
+	      if exists (select T1.actividad_cod from actividades as T1 INNER JOIN salas as T2 ON T1.actividad_cod = @actividad_cod_fk and T2.sala_id = @sala_fk)
+	         begin
+	            insert into clases (limite_inscripcion, total_alumnos, precio, sala_fk, fecha_hora, actividad_cod_fk)
+                values (@limite_inscripcion, @total_alumnos, @precio, @sala_fk, @fecha_hora, @actividad_cod_fk)
+	         end
+	      else
+	         begin
+			    print 'No existe un codigo de actividad o sala iguales a los ingresados, por favor verificar.'
+                return
+             end
 	   end
 GO
 
@@ -51,27 +48,26 @@ if((@alumno_fk = '') or (@clas_fecha_fk = '') or (@activi_cod_clas_fk = ''))
     end
 else
 -- Verifica si ya hay una clase de alumno con el mismo codigo de actividad, fecha y alumno --
-    select clase_alumno_id, alumno_fk, clas_fecha_fk, activi_cod_clas_fk from clase_de_alumnos where fecha_hora = @fecha_hora and actividad_cod_fk = @actividad_cod_fk
-	if (@@ROWCOUNT = 0)
-	   begin
-	   -- Verifica si existe la fecha, actividad y alumno en sus tablas respectivas
-	      select T1.alumno_id, T1.persona_fk from alumnos as T1 
-	       INNER JOIN clases as T2 ON T1.alumno_id = @alumno_fk and T2.fecha_hora = @clas_fecha_fk and T2.actividad_cod_fk = @activi_cod_clas_fk
-	      if (@@ROWCOUNT = 0)
-	         begin
-	            print 'No existe un id de alumno, codigo de actividad o fecha iguales a los ingresados, por favor verificar.'
-                return
-	         end
-	      else
-	         begin
-		        insert into clases_de_alumnos (alumno_fk, clas_fecha_fk, activi_cod_clas_fk)
-                values (@alumno_fk, @clas_fecha_fk, @activi_cod_clas_fk)
-	         end
-	   end
-	else
+	if exists (select clase_alumno_id from clase_de_alumnos where alumno_fk = @alumno_fk and fecha_hora = @fecha_hora and actividad_cod_fk = @actividad_cod_fk)
 	   begin
 	      print 'Un Alumno no se puede incribir mas de una vez en la misma actividad y fecha, por favor verificar.'
           return
+	   end
+	else
+	   begin
+	   -- Verifica si existe la fecha, actividad y alumno en sus tablas respectivas
+	      if exists (select T1.alumno_id from alumnos as T1 INNER JOIN clases as T2 ON T1.alumno_id = @alumno_fk and T2.fecha_hora = @clas_fecha_fk and T2.actividad_cod_fk = @activi_cod_clas_fk)
+	         begin
+	            insert into clases_de_alumnos (alumno_fk, clas_fecha_fk, activi_cod_clas_fk)
+                values (@alumno_fk, @clas_fecha_fk, @activi_cod_clas_fk)
+				-- Para terminar aumenta el numero de total de alumnos en clases
+				update clases set total_alumnos = (total_alumnos + 1) where actividad_cod_fk = @activi_cod_clas_fk and fecha_hora = @clas_fecha_fk
+	         end
+	      else
+	         begin
+			    print 'No existe un id de alumno, codigo de actividad o fecha iguales a los ingresados, por favor verificar.'
+                return
+	         end
 	   end
 GO
 
@@ -86,16 +82,15 @@ if((@nombre_sala = ''))
        return
     end
 else
-    select sala_id, nombre_sala from salas where nombre_sala = @nombre_sala
-	if (@@ROWCOUNT = 0)
-	   begin
-	      insert into salas (nombre_sala)
-          values (@nombre_sala)
-	   end
-	else
+	if exists (select sala_id from salas where nombre_sala = @nombre_sala)
 	   begin
 	      print 'Ya hay una Sala con ese nombre, por favor verificar.'
           return
+	   end
+	else
+	   begin
+	      insert into salas (nombre_sala)
+          values (@nombre_sala)
        end
 GO
 
@@ -110,16 +105,15 @@ if((@nombre_actividad = '') or (@descripcion = ''))
        return
     end
 else
-    select actividad_cod, nombre_actividad, descripcion from actividades where nombre_actividad = @nombre_actividad
-	if (@@ROWCOUNT = 0)
-	   begin
-	      insert into alumnos (persona_fk)
-          values (@persona_fk)
-	   end
-	else
+	if exists (select actividad_cod from actividades where nombre_actividad = @nombre_actividad)
 	   begin
 	      print 'Ya hay una Actividad con ese nombre, por favor verificar.'
           return
+	   end
+	else
+	   begin
+	      insert into alumnos (persona_fk)
+          values (@persona_fk)
        end
 GO
 
@@ -134,16 +128,15 @@ if((@persona_fk = ''))
        return
     end
 else
-    select cedula, nombre, apellido1, apellido2, fecha_naci, direccion from personas where persona_fk = @persona_fk
-	if (@@ROWCOUNT = 0)
-	   begin
-	      print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
-          return
-	   end
-	else
+	if exists (select cedula from personas where persona_fk = @persona_fk)
 	   begin
 	      insert into alumnos (persona_fk)
           values (@persona_fk)
+	   end
+	else
+	   begin
+	      print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
+          return
        end
 GO
 
@@ -159,16 +152,15 @@ if((@cedula = '') or (@nombre = '') or (@apellido1 = '') or (@apellido2 = '') or
        return
     end
 else
-    select cedula, nombre, apellido1, apellido2, fecha_naci, direccion from personas where cedula = @cedula
-	if (@@ROWCOUNT = 0)
+	if exists (select cedula from personas where cedula = @cedula)
 	   begin
-	      insert into personas (cedula, nombre, apellido1, apellido2, fecha_naci, direccion)
-          values (@cedula, @nombre, @apellido1, @apellido2, @fecha_naci, @direccion)
+	      print 'Ya hay una persona con la Cedula: ' + convert(varchar(12), @cedula) + ', por favor verificar.'
+          return
 	   end
 	else
 	   begin
-		  print 'Ya hay una persona con la Cedula: ' + convert(varchar(12), @cedula) + ', por favor verificar.'
-          return
+		  insert into personas (cedula, nombre, apellido1, apellido2, fecha_naci, direccion)
+          values (@cedula, @nombre, @apellido1, @apellido2, @fecha_naci, @direccion)
        end
 GO
 
@@ -183,16 +175,15 @@ if((@persona_fk = '') or (@contrasena_usuario = ''))
        return
     end
 else
-    select cedula, nombre, apellido1, apellido2, fecha_naci, direccion from personas where persona_fk = @persona_fk
-	if (@@ROWCOUNT = 0)
-	   begin
-	      print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
-          return
-	   end
-	else
+	if exists (select cedula from personas where persona_fk = @persona_fk)
 	   begin
 	      insert into usuarios (persona_fk, contrasena_usuario)
           values (@persona_fk, @contrasena_usuario)
+	   end
+	else
+	   begin
+	      print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
+          return
        end
 GO
 
