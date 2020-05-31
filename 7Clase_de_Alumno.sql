@@ -14,4 +14,5 @@ Create Table clases_de_alumnos
 	Constraint FK_alumno Foreign Key (alumno_fk) References alumnos(alumno_id),
 	Constraint FK_clase Foreign Key (activi_cod_clas_fk, clas_fecha_fk) References clases(actividad_cod_fk, fecha_hora)
 )
+ON Clase_de_Alumnos
 Go

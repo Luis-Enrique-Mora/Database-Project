@@ -13,4 +13,5 @@ Create table actividades
 	--PK
 	Constraint PK_actividad Primary Key(actividad_Cod)
 )
+ON Actividades
 Go

@@ -17,4 +17,5 @@ Create Table personas
 	--PK
 	Constraint PK_persona Primary Key Clustered (persona_id)
 )
+ON Alumnos
 Go

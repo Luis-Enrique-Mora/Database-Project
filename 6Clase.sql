@@ -20,4 +20,5 @@ Create table clases
 	Constraint FK_actividad_clase Foreign key (actividad_cod_fk) References actividades(actividad_cod),
 	Constraint FK_sala_clase Foreign Key (sala_fk) References salas(sala_id)
 )
+ON Clases
 Go
