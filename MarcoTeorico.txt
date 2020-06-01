@@ -15,4 +15,5 @@ https://www.adictosaltrabajo.com/2008/07/11/triggersql/
 https://www.youtube.com/watch?v=FZLmXocmCLU
 https://www.youtube.com/watch?v=t4xuet48oiM
 https://www.sqlshack.com/working-with-sql-server-rowcount/
+https://solutioncenter.apexsql.com/how-to-create-a-sql-server-scheduled-backup/
 
