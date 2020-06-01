@@ -317,3 +317,67 @@ GO
 EXEC SP_Listadousuarios
 GO
 ------------------------------------------------------- ELIMINAR -------------------------------------------------------------------------
+----- Elimnar usuarios -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_Eliminarusuarios(@usuario_Id int)
+AS
+DELETE FROM usuarios where usuario_Id=@usuario_Id
+GO
+
+EXEC SP_Eliminarusuarios '1'
+GO
+----- Elimnar personas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_EliminarPersonas(@persona_Id int)
+AS
+DELETE FROM personas where persona_Id=@persona_Id
+GO
+
+EXEC SP_EliminarPersonas '1'
+GO
+----- Elimnar Alumnos -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_EliminarAlumnos(@alumno_Id int)
+AS
+DELETE FROM alumnos where alumno_Id=@alumno_Id
+GO
+
+EXEC SP_EliminarAlumnos '1'
+GO
+----- Elimnar Clase_de_alumnos -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_EliminarClase_de_alumnos(@clase_alumno_id int)
+AS
+DELETE FROM clase_de_alumnos where clase_alumno_id=@clase_alumno_id
+GO
+
+EXEC SP_EliminarAlumnos '1'
+GO
+----- Elimnar Salas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_EliminarSala(@sala_id int)
+AS
+DELETE FROM salas where sala_id=@sala_id
+GO
+
+EXEC SP_EliminarSala ''
+GO
+
+----- Elimnar Actividades -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_EliminarActividades(@actividad_cod int)
+AS
+DELETE FROM actividades where actividad_cod=@actividad_cod
+GO
+
+EXEC SP_EliminarActividades ''
+GO
+
+
