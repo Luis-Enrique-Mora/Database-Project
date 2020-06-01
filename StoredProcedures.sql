@@ -188,3 +188,132 @@ else
 GO
 
 ------------------------------------------------------- MODIFICAR ------------------------------------------------------------------------
+----- Modificar clases -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ModificarClases (@precio Decimal, @fecha_hora DateTime,@actividad_cod_fk int)
+AS
+UPDATE clases set precio=@precio where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
+GO 
+
+EXEC SP_ModificarClases '2000','22/02/2020','2'
+GO
+
+----- Modificar Salas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ModificarSalas (@sala_id int,@nombre_sala varchar(50))
+AS
+UPDATE salas set nombre_sala=@nombre_sala where sala_id=@sala_id
+GO 
+
+EXEC SP_ModificarSalas '',''
+GO
+----- Modificar Actividades -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ModificarActivades (@actividad_cod int,@nombre_actividad varchar(50),@descripcion varchar(200))
+AS
+UPDATE actividades set nombre_actividad=@nombre_actividad, descripcion=@descripcion where actividad_cod=@actividad_cod
+GO 
+
+EXEC SP_ModificarActivades 'Zumba','Cardio','1'
+GO
+
+----- Modificar Personas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ModificarPersonas (@persona_id int,@nombre varchar(20),@apellido1 varchar(20),@apellido2 varchar(20),@fecha_naci Date,@direccion Varchar(200))
+AS
+UPDATE personas set nombre=@nombre,apellido1=@apellido1,apellido2=@apellido2,fecha_naci=@fecha_naci,direccion=@direccion where persona_id=@persona_id
+GO 
+
+EXEC SP_ModificarPersonas 'Juan','Rodriguez','Ramirez','1999/02/21','San jose','1'
+GO
+
+----- Modificar Usuarios -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ModificarUsuarios (@usuario_id int,@contrasena_usuario varchar(50))
+AS
+UPDATE usuarios set contrasena_usuario=@contrasena_usuario where usuario_id=@usuario_id
+GO 
+
+EXEC SP_ModificarUsuarios 'sakjhdadhasoud','1'
+GO
+------------------------------------------------------- LISTADO --------------------------------------------------------------------------
+----- Listar clases -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ListadoClases
+AS
+select limite_inscripcion, total_alumnos, precio, sala_fk, fecha_hora, actividad_cod_fk  from clases
+GO
+
+EXEC SP_ListadoClases
+GO
+
+----- Listar clases_de_alumnos -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_Listadoclases_de_alumnos
+AS
+select clase_alumno_id, alumno_fk, clas_fecha_fk, activi_cod_clas_fk  from clases_de_alumnos
+GO
+
+EXEC SP_Listadoclases_de_alumnos
+GO
+
+----- Listar Salas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ListadoSalas
+AS
+select sala_id, nombre_sala   from salas
+GO
+
+EXEC SP_ListadoSalas
+GO
+
+----- Listar Actividades -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ListadoActividades
+AS
+select actividad_cod, nombre_actividad, descripcion  from actividades
+GO
+
+EXEC SP_ListadoActividades
+GO
+----- Listar alumnos -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_Listadoalumnos
+AS
+select alumno_Id, persona_fk  from alumnos
+GO
+
+EXEC SP_Listadoalumnos
+GO
+----- Listar personas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_ListadoPersonas
+AS
+select persona_Id, cedula, nombre, apellido1, apellido2, fecha_naci, direccion  from personas
+GO
+
+EXEC SP_ListadoPersonas
+GO
+----- Listar usuarios -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_Listadousuarios
+AS
+select usuario_Id, persona_fk, contrasena_usuario  from usuarios
+GO
+
+EXEC SP_Listadousuarios
+GO
+------------------------------------------------------- ELIMINAR -------------------------------------------------------------------------
