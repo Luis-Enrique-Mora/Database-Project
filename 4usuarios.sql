@@ -15,5 +15,5 @@ Create Table usuarios
 	--FK
 	Constraint FK_persona_usuario Foreign Key (persona_fk) References personas (persona_id)
 )
-ON Alumnos
+ON Usuarios
 Go
