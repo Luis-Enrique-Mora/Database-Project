@@ -58,10 +58,21 @@ else
 	   -- Verifica si existe la fecha, actividad y alumno en sus tablas respectivas
 	      if exists (select T1.alumno_id from alumnos as T1 INNER JOIN clases as T2 ON T1.alumno_id = @alumno_fk and T2.fecha_hora = @clas_fecha_fk and T2.actividad_cod_fk = @activi_cod_clas_fk)
 	         begin
-	            insert into clases_de_alumnos (alumno_fk, clas_fecha_fk, activi_cod_clas_fk)
-                values (@alumno_fk, @clas_fecha_fk, @activi_cod_clas_fk)
-				-- Para terminar aumenta el numero de total de alumnos en clases
-				update clases set total_alumnos = (total_alumnos + 1) where actividad_cod_fk = @activi_cod_clas_fk and fecha_hora = @clas_fecha_fk
+			    DECLARE @limite int=0, @total int=0
+                SELECT @limite =  [limite_inscripcion] FROM clases WHERE actividad_cod_fk = @activi_cod_clas_fk and fecha_hora = @clas_fecha_fk
+				SELECT @total =  [total_alumnos] FROM clases WHERE actividad_cod_fk = @activi_cod_clas_fk and fecha_hora = @clas_fecha_fk
+				if(@total < @limite)
+				   begin
+				      insert into clases_de_alumnos (alumno_fk, clas_fecha_fk, activi_cod_clas_fk)
+                      values (@alumno_fk, @clas_fecha_fk, @activi_cod_clas_fk)
+				      -- Para terminar aumenta el numero de total de alumnos en clases
+				      update clases set total_alumnos = (total_alumnos + 1) where actividad_cod_fk = @activi_cod_clas_fk and fecha_hora = @clas_fecha_fk
+				   end
+				else
+				   begin
+				      print 'Ya no hay espacio disponible en esta clase.'
+                      return
+				   end
 	         end
 	      else
 	         begin
