@@ -10,5 +10,5 @@ Create Table salas
 	--PK
 	Constraint PK_sala Primary Key (sala_id)
 )
-ON Clase_de_Alumnos
+ON Salas
 GO

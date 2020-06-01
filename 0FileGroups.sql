@@ -17,7 +17,7 @@ MAXSIZE = 1500Mb,
 FILEGROWTH = 100Mb)
 GO
 
---Creamos los 4 grupos de archivos
+--Creamos los 7 grupos de archivos
 ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Actividades
 GO
@@ -30,8 +30,17 @@ GO
 ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Alumnos
 GO
+ALTER DATABASE SuperStarGymServer
+ADD FILEGROUP Personas
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILEGROUP Usuarios
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILEGROUP Salas
+GO
 
---Añadimos los 3 archivos de datos al grupo de MedicoGeneral y al grupo de Especialistas
+--Añadimos los archivos de datos 
 Use Master
 GO
 ALTER DATABASE SuperStarGymServer
@@ -69,4 +78,31 @@ SIZE = 500MB,
 MAXSIZE = 1GB,
 FILEGROWTH = 50MB)
 TO FILEGROUP Alumnos
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILE
+(NAME = 'Per01_Data',
+FILENAME = 'C:\SQLData\Per01_Data.ndf',
+SIZE = 500MB,
+MAXSIZE = 1GB,
+FILEGROWTH = 50MB)
+TO FILEGROUP Personas
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILE
+(NAME = 'Usua01_Data',
+FILENAME = 'C:\SQLData\Usua01_Data.ndf',
+SIZE = 500MB,
+MAXSIZE = 1GB,
+FILEGROWTH = 50MB)
+TO FILEGROUP Usuarios
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILE
+(NAME = 'Sala01_Data',
+FILENAME = 'C:\SQLData\Sala01_Data.ndf',
+SIZE = 500MB,
+MAXSIZE = 1GB,
+FILEGROWTH = 50MB)
+TO FILEGROUP Salas
 GO
