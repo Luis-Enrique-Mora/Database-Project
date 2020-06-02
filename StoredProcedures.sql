@@ -399,6 +399,7 @@ Use SuperStarGymServer
 GO
 Create PROC SP_BuscarUsuarios(@usuario_Id int)
 AS
+<<<<<<< HEAD
 IF (@usuario_Id = '')
    BEGIN
       PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
@@ -407,6 +408,24 @@ ELSE
    BEGIN
       select contrasena_usuario, persona_fk FROM usuarios where usuario_Id=@usuario_Id
    END
+=======
+ IF (@usuario_Id = '')
+  BEGIN
+   PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+   ELSE
+  BEGIN
+   if exists(select usuario_id from usuarios where usuario_id = @usuario_Id)
+ begin
+  select contrasena_usuario, persona_fk FROM usuarios where usuario_id=@usuario_Id
+ END
+  else
+	begin
+	  print 'No se Encontro el Id del Usuario'
+	  return 
+    END
+ END
+>>>>>>> ecaf5eaea79940acf7cb00dedd55c111a94c939f
 GO
  
 EXEC SP_BuscarUsuarios '1'
@@ -418,13 +437,21 @@ GO
 CREATE PROC SP_BuscarPersonas(@Personas_id int)
 AS
 IF(@Personas_id = '')
-BEGIN
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ BEGIN
+  PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+   ELSE
+  BEGIN
+ if exists(select persona_id from personas where persona_id = @Personas_id)
+   begin
+ select cedula,nombre,apellido1,apellido2,fecha_naci,direccion FROM personas where persona_id=@Personas_id
 END
-ELSE
-BEGIN
-select cedula,nombre,apellido1,apellido2,fecha_naci,direccion FROM personas where persona_id=@Personas_id
-END
+  ELSE
+    begin
+	  print 'No se Encontro el Id de la Persona'
+	  return 
+    END
+ END
 GO
 
 EXEC SP_BuscarPersonas ''
@@ -436,13 +463,21 @@ GO
 CREATE PROC SP_BuscarAlumnos(@Alumnos_id int)
 AS
 IF(@Alumnos_id = '')
-BEGIN
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
-END
-ELSE
-BEGIN
-select persona_fk FROM alumnos where alumno_id=@Alumnos_id
-END
+   BEGIN
+  PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+   END
+  ELSE
+  BEGIN
+ if exists(select alumno_id from alumnos where alumno_id = @Alumnos_id)
+  begin
+    select persona_fk FROM alumnos where alumno_id=@Alumnos_id
+ END
+   ELSE 
+   BEGIN
+      PRINT 'No se Encontro el Id del Alumno'
+    RETURN
+   END
+ END
 GO
 
 EXEC SP_BuscarAlumnos ''
@@ -454,13 +489,21 @@ GO
 Create PROC SP_BuscarClase_de_alumnos(@clase_alumno_id int)
 AS
 IF (@clase_alumno_id ='')
-BEGIN 
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+  BEGIN 
+   PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
 END
-ELSE
-BEGIN
-select alumno_fk,clas_fecha_fk,activi_cod_clas_fk FROM clase_de_alumnos where clase_alumno_id=@clase_alumno_id
-END
+  ELSE
+  BEGIN
+   if exists(select clase_alumno_id from clase_de_alumnos where clase_alumno_id=@clase_alumno_id)
+ BEGIN
+   select alumno_fk,clas_fecha_fk,activi_cod_clas_fk FROM clase_de_alumnos where clase_alumno_id=@clase_alumno_id
+  END
+   else
+    begin
+	  print 'No se Encontro el Id de la Clase del Alumno'
+	  return 
+    END
+ END
 GO
 
 EXEC SP_BuscarClase_de_alumnos '1'
@@ -473,13 +516,21 @@ GO
 CREATE PROC SP_BuscarClases(@fecha_hora Datetime, @actividad_cod_fk int)
 AS
 IF((@actividad_cod_fk ='') or (@fecha_hora =''))
-BEGIN 
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+	BEGIN 
+	PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+ 	ELSE
+ BEGIN
+   if exists(select fecha_hora, actividad_cod_fk from clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk)
+  BEGIN
+   select limite_inscripcion,total_alumnos,salas_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
 END
-ELSE
-BEGIN
-select limite_inscripcion,total_alumnos,salas_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
-END
+else
+	begin
+	  print 'No se Encontro la Clase Solicitada'
+	  return 
+    END
+ END
 GO
 
 EXEC SP_BuscarClases '',''
@@ -492,13 +543,21 @@ GO
 CREATE PROC SP_BuscarActividades(@Actividad_Cod int)
 AS
 IF(@Actividad_Cod ='')
-BEGIN
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
-END
-ELSE
-BEGIN
-select nombre_actividad,descripcion FROM actividades where actividad_Cod=@Actividad_Cod
-END
+  BEGIN
+	PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+   END
+	ELSE
+ BEGIN
+   if exists(select actividad_Cod from actividades where actividad_Cod = @Actividad_Cod)
+    begin
+	select nombre_actividad,descripcion FROM actividades where actividad_Cod=@Actividad_Cod
+   END
+ else
+	begin
+	  print 'No se Encontro el Id de la actividad'
+	  return 
+    END
+ END
 GO
 
 EXEC SP_BuscarActividades ''
@@ -508,19 +567,27 @@ GO
 
 Use SuperStarGymServer
 GO
-Alter PROC SP_BuscarSalas(@salad_id int)
+Create PROC SP_BuscarSalas(@sala_id int)
 AS
-IF (@salad_id = '')
-BEGIN
-PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
-END
+IF (@sala_id = '')
+  BEGIN
+   PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+  END
 ELSE
-Begin
-select nombre_sala FROM salas where sala_id=@salad_id
-END
+ Begin
+   if exists(select sala_id from salas where sala_id = @sala_id)
+   begin
+	select nombre_sala FROM salas where sala_id=@sala_id
+   END
+	else
+	begin
+	  print 'No se Encontro el Id de la Sala'
+	  return 
+    END
+ END
 GO
 
-EXEC SP_BuscarSalas '1'
+EXEC SP_BuscarSalas ''
 GO
 
 
