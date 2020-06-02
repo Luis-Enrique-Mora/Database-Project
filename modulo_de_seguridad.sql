@@ -1,12 +1,3 @@
- 
-CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Ozq%dgLRosQOmZ!nqQ0hzAHcqDe4FNumXMAzzv3mr@n0SISZk0';  
-Go
-
-Use Master  
-Go  
-create Certificate BackupEncriptCert  
-   With Subject = 'Backup Encryption Certificate';  
-Go
 
 Use SuperStarGymServer
 Go
@@ -16,9 +7,6 @@ As
 		Backup database SuperStarGymServer
 		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
 		With name ='Gym Full backup',
-		Compression,
-		Encryption (Algorithm = AES_256, Server CERTIFICATE = BackupEncriptCert),
-		STATS = 10,
 		Description = 'full back up de la base de datos SuperStarGymServer'
 	End
 Go
@@ -30,9 +18,6 @@ As
 		Backup database SuperStarGymServer
 		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
 		With name ='Gym differential backup',
-		Compression,
-		Encryption (Algorithm = AES_256, Server CERTIFICATE = BackupEncriptCert),
-		STATS = 10,
 		Description = 'differential back up de la base de datos SuperStarGymServer',
 		Differential
 	End
@@ -47,9 +32,6 @@ As
 		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
 		With 
 		name ='Gym log backup',
-		Compression,
-		Encryption (Algorithm = AES_256, Server CERTIFICATE = BackupEncriptCert),
-		STATS = 10,
 		Description = 'log back up de la base de datos SuperStarGymServer'
 	End
 Go
