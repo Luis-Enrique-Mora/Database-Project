@@ -6,18 +6,18 @@ Create Database SuperStarGymServer
 On Primary
 (NAME = 'SuperStarGymServer_Data',
 FILENAME='C:\SQLData\SuperStarGymServer_Data.Mdf',
-SIZE = 1Gb,
-MAXSIZE = 2Gb,
-FILEGROWTH = 200Mb)
+SIZE = 500mb,
+MAXSIZE = 1Gb,
+FILEGROWTH = 100Mb)
 Log On 
 (NAME = 'SuperStarGymServer_Log',
 FILENAME='C:\SQLLog\SuperStarGymServer_Log.Ldf',
-SIZE = 500Mb,
-MAXSIZE = 1500Mb,
-FILEGROWTH = 100Mb)
+SIZE = 100Mb,
+MAXSIZE = 500Mb,
+FILEGROWTH = 20Mb)
 GO
 
---Creamos los 7 grupos de archivos
+--Creamos los grupos de archivos
 ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Actividades
 GO
@@ -39,7 +39,9 @@ GO
 ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Salas
 GO
-
+ALTER DATABASE SuperStarGymServer
+ADD FILEGROUP Historial
+GO
 --Añadimos los archivos de datos 
 Use Master
 GO
@@ -105,4 +107,13 @@ SIZE = 500MB,
 MAXSIZE = 1GB,
 FILEGROWTH = 50MB)
 TO FILEGROUP Salas
+GO
+ALTER DATABASE SuperStarGymServer
+ADD FILE
+(NAME = 'Histo01_Data',
+FILENAME = 'C:\SQLData\Histo01_Data.ndf',
+SIZE = 500MB,
+MAXSIZE = 1GB,
+FILEGROWTH = 50MB)
+TO FILEGROUP Historial
 GO
