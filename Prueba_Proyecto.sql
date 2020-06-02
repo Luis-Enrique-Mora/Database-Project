@@ -1,4 +1,6 @@
 ---Creamos la base de datos
+Drop database if exists SuperStarGymServer
+
 Use Master
 GO
 Create Database SuperStarGymServer
@@ -82,7 +84,7 @@ FILEGROWTH = 50MB)
 TO FILEGROUP Historial
 GO
 
-
+sp_helpdb SuperStarGymServer
 ---------------------------------------------
 Use SuperStarGymServer
 Go
@@ -541,7 +543,7 @@ Go
 ----- Insertar clases -----
 Use SuperStarGymServer
 GO
-ALTER PROC SP_InsertClases (@limite_inscripcion int, @total_alumnos int, @precio money, @sala_fk int, @fecha_hora DateTime, @actividad_cod_fk int)
+CREATE PROC SP_InsertClases (@limite_inscripcion int, @total_alumnos int, @precio money, @sala_fk int, @fecha_hora DateTime, @actividad_cod_fk int)
 AS
 if((@limite_inscripcion = '') or (@precio = '') or (@sala_fk = '') or (@fecha_hora = '') or (@actividad_cod_fk = ''))
     begin 
@@ -1024,6 +1026,21 @@ CREATE PROC SP_Listadousuarios
 AS
 select usuario_Id, persona_fk, contrasena_usuario  from usuarios
 GO
+
+------------------------------------------------------- EXECUTE LISTAR -------------------------------------------------------------------------
+Execute SP_ListadoClases 
+
+Exec SP_Listadoclases_de_alumnos
+
+Exec SP_ListadoSalas
+
+Exec SP_ListadoActividades
+
+Exec SP_Listadoalumnos
+
+Exec SP_ListadoPersonas
+
+Exec SP_Listadousuarios
 ------------------------------------------------------- BUSCAR -------------------------------------------------------------------------
 -- Buscar Usuarios -----
 Use SuperStarGymServer
@@ -1130,7 +1147,7 @@ IF((@actividad_cod_fk ='') or (@fecha_hora =''))
  BEGIN
    if exists(select fecha_hora, actividad_cod_fk from clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk)
   BEGIN
-   select limite_inscripcion,total_alumnos,salas_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
+   select limite_inscripcion,total_alumnos,sala_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
 END
 else
     begin
@@ -1163,6 +1180,18 @@ IF(@Actividad_Cod ='')
  END
 GO
 
+------------------------------------------------------- EXECUTE BUSCAR -------------------------------------------------------------------------
+Execute SP_BuscarUsuarios ''   
+
+Exec SP_BuscarPersonas ''
+
+Exec SP_BuscarAlumnos ''
+
+Exec SP_BuscarClase_de_alumnos ''
+
+Exec SP_BuscarClases '',''
+
+Exec SP_BuscarActividades ''
 ------------------------------------------------------- ELIMINAR -------------------------------------------------------------------------
 ----- Elimnar usuarios -----
 
@@ -1386,6 +1415,19 @@ else
    end
 GO
 
+------------------------------------------------------- EXECUTE ELIMINAR -------------------------------------------------------------------------
+Execute SP_Eliminarusuarios ''   
+
+Exec SP_EliminarPersonas ''
+
+Exec SP_EliminarAlumnos ''
+
+Exec SP_EliminarClase_de_alumnos ''
+
+Exec SP_EliminarClase '',''
+
+Exec SP_EliminarActividades ''
+
 ----------------------- BACKUP ----------------
 Use SuperStarGymServer
 Go
@@ -1398,6 +1440,9 @@ As
 		Description = 'full back up de la base de datos SuperStarGymServer'
 	End
 Go
+
+
+
 Use SuperStarGymServer
 Go
 create proc differential_backup
@@ -1408,19 +1453,6 @@ As
 		With name ='Gym differential backup',
 		Description = 'differential back up de la base de datos SuperStarGymServer',
 		Differential
-	End
-Go
-
-Use SuperStarGymServer
-Go
-create proc log_backup
-As
-	Begin
-		Backup Log SuperStarGymServer
-		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
-		With 
-		name ='Gym log backup',
-		Description = 'log back up de la base de datos SuperStarGymServer'
 	End
 Go
 
@@ -1435,10 +1467,10 @@ As
 
 		Restore database SuperStarGymServer
 		From disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
-		With file = 2, NoRecovery
-
-		Restore database SuperStarGymServer
-		From disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
-		With file = 3, Recovery
+		With file = 2, Recovery
 	End
 Go
+
+EXEC full_backup
+
+Exec differential_backup
