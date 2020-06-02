@@ -10,6 +10,7 @@ Create table Historial_Triggers
 	Descripcion Varchar(50) not null,
 	Constraint PK_Historial_Trigger Primary Key (Historial_Id)
 )
+ON Historial
 Go
 
 ---TRIGGER INSERT---
