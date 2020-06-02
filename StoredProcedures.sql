@@ -392,3 +392,133 @@ EXEC SP_EliminarActividades ''
 GO
 
 
+------------------------------------------------------- BUSCAR ID ------------------------------------------------------------------------
+----- Buscar Usuarios -----
+
+Use SuperStarGymServer
+GO
+Create PROC SP_BuscarUsuarios(@usuario_Id int)
+AS
+IF (@usuario_Id = '')
+BEGIN
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select contrasena_usuario, persona_fk FROM usuarios where usuario_Id=@usuario_Id
+END
+GO
+ 
+EXEC SP_BuscarUsuarios '1'
+GO
+----- Buscar Personas -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarPersonas(@Personas_id int)
+AS
+IF(@Personas_id = '')
+BEGIN
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select cedula,nombre,apellido1,apellido2,fecha_naci,direccion FROM personas where persona_id=@Personas_id
+END
+GO
+
+EXEC SP_BuscarPersonas ''
+GO
+----- Buscar Alumnos -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarAlumnos(@Alumnos_id int)
+AS
+IF(@Alumnos_id = '')
+BEGIN
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select persona_fk FROM alumnos where alumno_id=@Alumnos_id
+END
+GO
+
+EXEC SP_BuscarAlumnos ''
+GO
+----- Buscar Clase_de_alumnos -----
+
+Use SuperStarGymServer
+GO
+Create PROC SP_BuscarClase_de_alumnos(@clase_alumno_id int)
+AS
+IF (@clase_alumno_id ='')
+BEGIN 
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select alumno_fk,clas_fecha_fk,activi_cod_clas_fk FROM clase_de_alumnos where clase_alumno_id=@clase_alumno_id
+END
+GO
+
+EXEC SP_BuscarClase_de_alumnos '1'
+GO
+
+----- Buscar Clases -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarClases(@fecha_hora Datetime, @actividad_cod_fk int)
+AS
+IF((@actividad_cod_fk ='') or (@fecha_hora =''))
+BEGIN 
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select limite_inscripcion,total_alumnos,salas_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
+END
+GO
+
+EXEC SP_BuscarClases '',''
+GO
+
+----- Buscar Actividades -----
+
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarActividades(@Actividad_Cod int)
+AS
+IF(@Actividad_Cod ='')
+BEGIN
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+BEGIN
+select nombre_actividad,descripcion FROM actividades where actividad_Cod=@Actividad_Cod
+END
+GO
+
+EXEC SP_BuscarActividades ''
+GO
+
+----- Buscar Salas -----
+
+Use SuperStarGymServer
+GO
+Alter PROC SP_BuscarSalas(@salad_id int)
+AS
+IF (@salad_id = '')
+BEGIN
+PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+ELSE
+Begin
+select nombre_sala FROM salas where sala_id=@salad_id
+END
+GO
+
+EXEC SP_BuscarSalas '1'
+GO
