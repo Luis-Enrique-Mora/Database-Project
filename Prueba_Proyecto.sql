@@ -16,7 +16,7 @@ MAXSIZE = 1500Mb,
 FILEGROWTH = 100Mb)
 GO
 
---Creamos 4 grupos de archivos
+--Creamos 5 grupos de archivos
 ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Actividades
 GO
@@ -33,7 +33,7 @@ ALTER DATABASE SuperStarGymServer
 ADD FILEGROUP Historial
 GO
 
---Añadimos los 3 archivos de datos al grupo de MedicoGeneral y al grupo de Especialistas
+--Añadimos los archivos de datos
 Use Master
 GO
 ALTER DATABASE SuperStarGymServer
@@ -549,15 +549,15 @@ if((@limite_inscripcion = '') or (@precio = '') or (@sala_fk = '') or (@fecha_ho
        return
     end
 else
--- Verifica si ya hay una clase con el mismo codigo de actividad y fecha --
-	if exists (select fecha_hora from clases where fecha_hora = @fecha_hora and actividad_cod_fk = @actividad_cod_fk)
+    -- Verifica si ya hay una clase con el mismo codigo de actividad y fecha --
+	if exists (select fecha_hora from clases where CAST(fecha_hora As date) = CAST(@fecha_hora As date) and actividad_cod_fk = @actividad_cod_fk)
 	   begin
 	      print 'Ya hay una clase agendada con el mismo codigo de actividad y fecha, por favor verificar.'
           return
 	   end
 	else
 	   begin
-	   -- Verifica si existe la sala y actividad en sus tablas respectivas
+	      -- Verifica si existe la sala y actividad en sus tablas respectivas
 	      if exists (select T1.actividad_cod from actividades as T1 INNER JOIN salas as T2 ON T1.actividad_cod = @actividad_cod_fk and T2.sala_id = @sala_fk)
 	         begin
 	            insert into clases (limite_inscripcion, total_alumnos, precio, sala_fk, fecha_hora, actividad_cod_fk)
@@ -582,7 +582,7 @@ if((@alumno_fk = '') or (@clas_fecha_fk = '') or (@activi_cod_clas_fk = ''))
        return
     end
 else
--- Verifica si ya hay una clase de alumno con el mismo codigo de actividad, fecha y alumno --
+    -- Verifica si ya hay una clase de alumno con el mismo codigo de actividad, fecha y alumno --
 	if exists (select clase_alumno_id from clases_de_alumnos where alumno_fk = @alumno_fk and clas_fecha_fk = @clas_fecha_fk and activi_cod_clas_fk = @activi_cod_clas_fk)
 	   begin
 	      print 'Un Alumno no se puede incribir mas de una vez en la misma actividad y fecha, por favor verificar.'
@@ -590,7 +590,7 @@ else
 	   end
 	else
 	   begin
-	   -- Verifica si existe la fecha, actividad y alumno en sus tablas respectivas
+	      -- Verifica si existe la fecha, actividad y alumno en sus tablas respectivas
 	      if exists (select T1.alumno_id from alumnos as T1 INNER JOIN clases as T2 ON T1.alumno_id = @alumno_fk and T2.fecha_hora = @clas_fecha_fk and T2.actividad_cod_fk = @activi_cod_clas_fk)
 	         begin
 			    DECLARE @limite int=0, @total int=0
@@ -736,26 +736,54 @@ else
 	   end
 	else
 	   begin
-	if exists (select cedula from personas where persona_id = @persona_fk)
-	   begin
-	      insert into usuarios (persona_fk, contrasena_usuario)
-          values (@persona_fk, @contrasena_usuario)
-	   end
-	else
-	   begin
-	      print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
-          return
-       end
+	      if exists (select cedula from personas where persona_id = @persona_fk)
+	         begin
+	            insert into usuarios (persona_fk, contrasena_usuario)
+                values (@persona_fk, @contrasena_usuario)
+	         end
+	      else
+	         begin
+	            print 'No se ha encontrado el id de la persona ingresada, por favor verificar.'
+                return
+             end
 	   end
 GO
 --------------------------- EXEC INSERTAR ------------------------------
 
+-- @cedula varchar(25), @nombre varchar(50), @apellido1 varchar(25), @apellido2 varchar(25), @fecha_naci Date, @direccion varchar(200)
+use SuperStarGymServer
+go
 exec SP_InsertPersona '504200533','Keivin','Toruño','Jiménez','1998/02/11','San Martin'
+
+-- @nombre_actividad Varchar(50), @descripcion varchar(255)
+use SuperStarGymServer
+go
 exec SP_InsertActividades 'Natacion','Nadar'
+
+-- @nombre_sala varchar(20)
+use SuperStarGymServer
+go
 exec SP_InsertSalas '002'
-exec SP_InsertAlumnos '1'
-exec SP_InsertClases '5','0','11','1','2016-10-23 10:10:00','2'
-exec SP_InsertClasesDeAlumnos '2','2016-10-23 10:10:00','1'
+
+-- @persona_fk int, @contrasena_usuario varchar(50)
+use SuperStarGymServer
+go
+exec SP_InsertUsuarios '1', 'root'
+
+-- @persona_fk int
+use SuperStarGymServer
+go
+exec SP_InsertAlumnos '2'
+
+-- @limite_inscripcion int, @total_alumnos int, @precio money, @sala_fk int, @fecha_hora DateTime, @actividad_cod_fk int
+use SuperStarGymServer
+go
+exec SP_InsertClases '5','0','11','1','2016-10-26 10:11:00','1'
+
+-- @alumno_fk int, @clas_fecha_fk DateTime, @activi_cod_clas_fk int
+use SuperStarGymServer
+go
+exec SP_InsertClasesDeAlumnos '4','2016-10-23 10:10:00','1'
 
 
 ------------------------------------------------------- MODIFICAR ------------------------------------------------------------------------
@@ -922,16 +950,19 @@ else
 	end
 GO
 --------------------------- EXEC MODIFICAR ------------------------------
-
+-- @persona_id int, @nombre varchar(20), @apellido1 varchar(20), @apellido2 varchar(20), @fecha_naci Date, @direccion Varchar(200)
 exec SP_ModificarPersonas '504200533','Keivin','Toruño','Jiménez','1998/02/11','San Martin'
 
-exec SP_ModificarActividades '','Zumba','Cardio'
+-- @actividad_cod int, @nombre_actividad varchar(50), @descripcion varchar(200)
+exec SP_ModificarActividades '1','Zumba','Cardio'
 
-exec SP_ModificarSalas '','001'
+-- @sala_id int, @nombre_sala varchar(50)
+exec SP_ModificarSalas '1','001'
 
+-- @limite_inscripcion int, @salas_fk int, @precio money, @fecha_hora DateTime, @actividad_cod_fk int
 exec SP_ModificarClases '1','11','1','2016-10-23 10:10:00','1'
 
-                              -- @clase_alumno_id,  @alumno_fk,  @clas_fecha_fk,  @activi_cod_clas_fk --
+-- @clase_alumno_id int, @alumno_fk int, @clas_fecha_fk DateTime, @activi_cod_clas_fk int
 exec SP_ModificarClasesDeAlumnos '1','1','2016-10-23 10:10:00','1'
 
 ------------------------------------------------------- LISTADO --------------------------------------------------------------------------
@@ -956,7 +987,7 @@ Use SuperStarGymServer
 GO
 CREATE PROC SP_ListadoSalas
 AS
-select sala_id, nombre_sala   from salas
+select sala_id, nombre_sala  from salas
 GO
 
 ----- Listar Actividades -----
@@ -992,6 +1023,144 @@ GO
 CREATE PROC SP_Listadousuarios
 AS
 select usuario_Id, persona_fk, contrasena_usuario  from usuarios
+GO
+------------------------------------------------------- BUSCAR -------------------------------------------------------------------------
+-- Buscar Usuarios -----
+Use SuperStarGymServer
+GO
+Create PROC SP_BuscarUsuarios(@usuario_Id int)
+AS
+ IF (@usuario_Id = '')
+  BEGIN
+   PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+   ELSE
+  BEGIN
+   if exists(select usuario_id from usuarios where usuario_id = @usuario_Id)
+ begin
+  select contrasena_usuario, persona_fk FROM usuarios where usuario_id=@usuario_Id
+ END
+  else
+    begin
+      print 'No se Encontro el Id del Usuario'
+      return 
+    END
+ END
+GO
+
+----- Buscar Personas -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarPersonas(@Personas_id int)
+AS
+IF(@Personas_id = '')
+ BEGIN
+  PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+   ELSE
+  BEGIN
+ if exists(select persona_id from personas where persona_id = @Personas_id)
+   begin
+ select cedula,nombre,apellido1,apellido2,fecha_naci,direccion FROM personas where persona_id=@Personas_id
+END
+  ELSE
+    begin
+      print 'No se Encontro el Id de la Persona'
+      return 
+    END
+ END
+GO
+
+----- Buscar Alumnos -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarAlumnos(@Alumnos_id int)
+AS
+IF(@Alumnos_id = '')
+   BEGIN
+  PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+   END
+  ELSE
+  BEGIN
+ if exists(select alumno_id from alumnos where alumno_id = @Alumnos_id)
+  begin
+    select persona_fk FROM alumnos where alumno_id=@Alumnos_id
+ END
+   ELSE 
+   BEGIN
+      PRINT 'No se Encontro el Id del Alumno'
+    RETURN
+   END
+ END
+GO
+
+----- Buscar Clase_de_alumnos -----
+Use SuperStarGymServer
+GO
+Create PROC SP_BuscarClase_de_alumnos(@clase_alumno_id int)
+AS
+IF (@clase_alumno_id ='')
+  BEGIN 
+   PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+END
+  ELSE
+  BEGIN
+   if exists(select clase_alumno_id from clase_de_alumnos where clase_alumno_id=@clase_alumno_id)
+ BEGIN
+   select alumno_fk,clas_fecha_fk,activi_cod_clas_fk FROM clase_de_alumnos where clase_alumno_id=@clase_alumno_id
+  END
+   else
+    begin
+      print 'No se Encontro el Id de la Clase del Alumno'
+      return 
+    END
+ END
+GO
+
+----- Buscar Clases -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarClases(@fecha_hora Datetime, @actividad_cod_fk int)
+AS
+IF((@actividad_cod_fk ='') or (@fecha_hora =''))
+    BEGIN 
+    PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+ END
+     ELSE
+ BEGIN
+   if exists(select fecha_hora, actividad_cod_fk from clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk)
+  BEGIN
+   select limite_inscripcion,total_alumnos,salas_fk,precio FROM clases where fecha_hora=@fecha_hora and actividad_cod_fk=@actividad_cod_fk
+END
+else
+    begin
+      print 'No se Encontro la Clase Solicitada'
+      return 
+    END
+ END
+GO
+
+----- Buscar Actividades -----
+Use SuperStarGymServer
+GO
+CREATE PROC SP_BuscarActividades(@Actividad_Cod int)
+AS
+IF(@Actividad_Cod ='')
+  BEGIN
+    PRINT 'NO SE PUEDEN INGRESAR VALORES NULOS'
+   END
+    ELSE
+ BEGIN
+   if exists(select actividad_Cod from actividades where actividad_Cod = @Actividad_Cod)
+    begin
+    select nombre_actividad,descripcion FROM actividades where actividad_Cod=@Actividad_Cod
+   END
+ else
+    begin
+      print 'No se Encontro el Id de la actividad'
+      return 
+    END
+ END
 GO
 
 ------------------------------------------------------- ELIMINAR -------------------------------------------------------------------------
@@ -1216,3 +1385,60 @@ else
 		 end
    end
 GO
+
+----------------------- BACKUP ----------------
+Use SuperStarGymServer
+Go
+create proc full_backup
+As
+	Begin
+		Backup database SuperStarGymServer
+		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With name ='Gym Full backup',
+		Description = 'full back up de la base de datos SuperStarGymServer'
+	End
+Go
+Use SuperStarGymServer
+Go
+create proc differential_backup
+As
+	Begin
+		Backup database SuperStarGymServer
+		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With name ='Gym differential backup',
+		Description = 'differential back up de la base de datos SuperStarGymServer',
+		Differential
+	End
+Go
+
+Use SuperStarGymServer
+Go
+create proc log_backup
+As
+	Begin
+		Backup Log SuperStarGymServer
+		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With 
+		name ='Gym log backup',
+		Description = 'log back up de la base de datos SuperStarGymServer'
+	End
+Go
+
+Use master
+Go
+create proc restore_database
+As
+	Begin
+		Restore database SuperStarGymServer
+		From disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With file = 1, NoRecovery
+
+		Restore database SuperStarGymServer
+		From disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With file = 2, NoRecovery
+
+		Restore database SuperStarGymServer
+		From disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
+		With file = 3, Recovery
+	End
+Go
