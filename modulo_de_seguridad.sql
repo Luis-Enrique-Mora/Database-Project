@@ -28,7 +28,7 @@ Go
 create proc log_backup
 As
 	Begin
-		Backup Log SuperStarGymServer
+		Backup Log SuperStarGymServer_Log
 		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
 		With 
 		name ='Gym log backup',
@@ -54,3 +54,5 @@ As
 		With file = 3, Recovery
 	End
 Go
+
+Exec log_backup
