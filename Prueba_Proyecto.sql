@@ -755,38 +755,53 @@ GO
 -- @cedula varchar(25), @nombre varchar(50), @apellido1 varchar(25), @apellido2 varchar(25), @fecha_naci Date, @direccion varchar(200)
 use SuperStarGymServer
 go
-exec SP_InsertPersona '504200533','Keivin','Toruño','Jiménez','1998/02/11','San Martin'
+exec SP_InsertPersona '504350063','Anthony','Flores','Durán','2000/10/01','Sabana Grande'
+
+exec SP_ListadoPersonas 
 
 -- @nombre_actividad Varchar(50), @descripcion varchar(255)
 use SuperStarGymServer
 go
 exec SP_InsertActividades 'Natacion','Nadar'
 
+exec SP_ListadoActividades
+
 -- @nombre_sala varchar(20)
 use SuperStarGymServer
 go
 exec SP_InsertSalas '002'
+
+exec SP_ListadoSalas
 
 -- @persona_fk int, @contrasena_usuario varchar(50)
 use SuperStarGymServer
 go
 exec SP_InsertUsuarios '1', 'root'
 
+exec SP_Listadousuarios
+
 -- @persona_fk int
 use SuperStarGymServer
 go
 exec SP_InsertAlumnos '2'
+
+exec SP_Listadoalumnos
 
 -- @limite_inscripcion int, @total_alumnos int, @precio money, @sala_fk int, @fecha_hora DateTime, @actividad_cod_fk int
 use SuperStarGymServer
 go
 exec SP_InsertClases '5','0','11','1','2016-10-26 10:11:00','1'
 
+exec SP_ListadoClases
+
 -- @alumno_fk int, @clas_fecha_fk DateTime, @activi_cod_clas_fk int
 use SuperStarGymServer
 go
 exec SP_InsertClasesDeAlumnos '4','2016-10-23 10:10:00','1'
 
+exec SP_Listadoclases_de_alumnos
+
+exec SP_ListadoClases
 
 ------------------------------------------------------- MODIFICAR ------------------------------------------------------------------------
 ----- Modificar clase de alumno -----
@@ -955,17 +970,29 @@ GO
 -- @persona_id int, @nombre varchar(20), @apellido1 varchar(20), @apellido2 varchar(20), @fecha_naci Date, @direccion Varchar(200)
 exec SP_ModificarPersonas '504200533','Keivin','Toruño','Jiménez','1998/02/11','San Martin'
 
+exec SP_ListadoPersonas
+
 -- @actividad_cod int, @nombre_actividad varchar(50), @descripcion varchar(200)
 exec SP_ModificarActividades '1','Zumba','Cardio'
+
+exec SP_ListadoActividades
 
 -- @sala_id int, @nombre_sala varchar(50)
 exec SP_ModificarSalas '1','001'
 
+exec SP_ListadoSalas
+
 -- @limite_inscripcion int, @salas_fk int, @precio money, @fecha_hora DateTime, @actividad_cod_fk int
 exec SP_ModificarClases '1','11','1','2016-10-23 10:10:00','1'
 
+exec SP_ListadoClases
+
 -- @clase_alumno_id int, @alumno_fk int, @clas_fecha_fk DateTime, @activi_cod_clas_fk int
 exec SP_ModificarClasesDeAlumnos '1','1','2016-10-23 10:10:00','1'
+
+exec SP_Listadoclases_de_alumnos
+
+exec SP_ListadoClases
 
 ------------------------------------------------------- LISTADO --------------------------------------------------------------------------
 ----- Listar clases -----
@@ -1418,15 +1445,27 @@ GO
 ------------------------------------------------------- EXECUTE ELIMINAR -------------------------------------------------------------------------
 Execute SP_Eliminarusuarios ''   
 
+exec SP_Listadousuarios
+
 Exec SP_EliminarPersonas ''
+
+exec SP_ListadoPersonas
 
 Exec SP_EliminarAlumnos ''
 
+exec SP_Listadoalumnos
+
 Exec SP_EliminarClase_de_alumnos ''
+
+exec SP_Listadoclases_de_alumnos
 
 Exec SP_EliminarClase '',''
 
+EXEC SP_ListadoClases
+
 Exec SP_EliminarActividades ''
+
+EXEC SP_ListadoActividades
 
 ----------------------- BACKUP ----------------
 Use SuperStarGymServer
