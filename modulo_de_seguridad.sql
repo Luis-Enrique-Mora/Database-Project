@@ -45,7 +45,7 @@ As
 	Begin
 		Backup Log SuperStarGymServer
 		to disk = 'C:\DBBackUp\Backup_super_star_gym.bak'
-		--With 
+		With 
 		name ='Gym log backup',
 		Compression,
 		Encryption (Algorithm = AES_256, Server CERTIFICATE = BackupEncriptCert),
